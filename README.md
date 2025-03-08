@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+---
 
-First, run the development server:
+# 📚 Project Gutenberg Setup Guide  
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+This guide walks you through setting up **Supabase**, deploying serverless functions, linking pre-existing Supabase migrations, and integrating **Google AI Studio API** for text analysis.  
+
+---
+
+## 🚀 Prerequisites  
+Make sure you have the following installed:  
+- **Node.js** (>= 16.x)  
+- **npm** or **yarn**  
+- **Supabase account** → [Sign up here](https://supabase.com)  
+- **Google AI Studio API Key** → [Get it here](https://aistudio.google.com/app/apikey?)  
+
+---
+
+## 🛠️ 1. Setup Next.js Project  
+Clone the repository and install dependencies:  
+```sh
+git clone https://github.com/palwashakmalik/gutenberg-analyzer.git
+cd project-gutenberg
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create a **.env.local** file in the root directory and add:  
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-supabase-project-url.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🏗️ 2. Setup Supabase Project  
+### 2.1. Create a Supabase Account  
+1. Go to [Supabase](https://supabase.com) and sign up.  
+2. Click on **New Project**.  
+3. Copy the **Project URL** and **Anon Key** from the **API** section.  
 
-## Learn More
+### 2.2. Link Supabase Migrations  
+Since the **book table** and **Supabase functions** are already configured in the directory, we just need to link them to your Supabase project.  
 
-To learn more about Next.js, take a look at the following resources:
+1. Install Supabase CLI (if not already installed):  
+   ```sh
+   npm install -g supabase
+   supabase login
+   ```
+2. Initialize Supabase locally:  
+   ```sh
+   supabase init
+   ```
+3. Link the local project with your newly created Supabase project:  
+   ```sh
+   supabase link --project-ref your-project-ref
+   ```
+   Replace `your-project-ref` with the actual project reference found in your Supabase dashboard URL (e.g., `abcd1234.supabase.co`).  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Apply the database migrations:  
+   ```sh
+   supabase db push
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## ⚡ 3. Deploy Serverless Functions  
+We will deploy two functions:  
+1. **book-content** → Fetches book details  
+2. **text-analysis** → Performs AI-powered text analysis  
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3.1. Deploy Functions to Supabase  
+```sh
+supabase functions deploy book-content
+supabase functions deploy text-analysis
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🔑 4. Setup Google AI Studio API Key  
+### 4.1. Get API Key  
+1. Go to [Google AI Studio API Key](https://aistudio.google.com/app/apikey?)  
+2. Copy the **API Key**.  
+
+### 4.2. Add to Supabase Function Secrets  
+```sh
+supabase secrets set GOOGLE_API_KEY=your-google-api-key
+```
+
+---
+
+## ✅ 5. Run the Next.js App  
+```sh
+npm run dev
+```
+Your app should now be running at **http://localhost:3000** 🎉  
+
+---
+
+## 🎯 Conclusion  
+You’ve successfully set up:  
+✅ **Supabase Project** & linked it with Next.js  
+✅ **Connected existing Supabase migrations (book table, functions)**  
+✅ **Deployed Supabase functions** (`book-content` & `text-analysis`)  
+✅ **Configured Google AI Studio API Key**  
+
+Now you’re ready to build on top of this 🚀  
